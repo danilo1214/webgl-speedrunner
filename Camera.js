@@ -34,8 +34,7 @@ export default class Camera extends Node {
         let acc = vec3.create();
         
         vec3.add(acc, acc, forward);
-        console.log(elapsed);
-        vec3.scale(acc, acc, elapsed/10);
+        vec3.scale(acc, acc, elapsed/100);
         vec3.scale(right,right,3);
 
         if (this.keys['KeyD']) {
@@ -47,15 +46,17 @@ export default class Camera extends Node {
 
         // 2: update velocity
         vec3.scaleAndAdd(c.velocity, c.velocity, acc, dt * c.acceleration);
+        
 
+        vec3.scale(c.velocity, c.velocity, 1 - c.friction);
         // 3: if no movement, apply friction
-        if (!this.keys['KeyW'] &&
+        /*if (!this.keys['KeyW'] &&
             !this.keys['KeyS'] &&
             !this.keys['KeyD'] &&
             !this.keys['KeyA'])
         {
             vec3.scale(c.velocity, c.velocity, 1 - c.friction);
-        }
+        }*/
 
         // 4: limit speed
         const len = vec3.len(c.velocity);
