@@ -1,0 +1,104 @@
+{
+  "nodes": [
+    {
+      "type": "camera",
+      "translation": [0, 1, 0],
+      "aabb": {
+        "min": [-0.2, -0.2, -0.2],
+        "max": [0.2, 0.2, 0.2]
+      },
+      "aspect": 1,
+      "fov": 1.5,
+      "near": 0.01,
+      "far": 100
+    },
+    {
+      "type": "model",
+      "mesh": 0,
+      "texture": 0,
+      "aabb": {
+        "min": [-1, -0.05, -1],
+        "max": [1, 0.05, 1]
+      },
+      "translation": [0, 0, -5]
+    },
+    {
+      "type": "model",
+      "mesh": 0,
+      "texture": 0,
+      "aabb": {
+        "min": [-1, -0.05, -1],
+        "max": [1, 0.05, 1]
+      },
+      "translation": [0, 0, -6]
+    },
+    {
+      "type": "model",
+      "mesh": 0,
+      "texture": 0,
+      "aabb": {
+        "min": [-1, -0.05, -1],
+        "max": [1, 0.05, 1]
+      },
+      "translation": [0, 0, -7]
+    },
+    {
+      "type": "model",
+      "mesh": 0,
+      "texture": 0,
+      "aabb": {
+        "min": [-1, -0.05, -1],
+        "max": [1, 0.05, 1]
+      },
+      "translation": [0, 0, -8]
+    },
+    {
+      "type": "model",
+      "mesh": 0,
+      "texture": 0,
+      "aabb": {
+        "min": [-1, -0.05, -1],
+        "max": [1, 0.05, 1]
+      },
+      "translation": [0, 0, -9]
+    },
+    {
+      "type": "model",
+      "mesh": 0,
+      "texture": 0,
+      "aabb": {
+        "min": [-1, -0.05, -1],
+        "max": [1, 0.05, 1]
+      },
+      "translation": [0, 0, -10]
+    },
+    {
+      "type": "model",
+      "mesh": 0,
+      "texture": 0,
+      "aabb": {
+        "min": [-1, -0.05, -1],
+        "max": [1, 0.05, 1]
+      },
+      "translation": [0, 0, -11]
+    },
+    {
+      "type": "model",
+      "mesh": 0,
+      "texture": 0,
+      "aabb": {
+        "min": [-1, -0.05, -1],
+        "max": [1, 0.05, 1]
+      },
+      "translation": [0, 0, -12]
+    }
+  ],
+  "textures": [
+    "common/images/crate-diffuse.png",
+    "common/images/grass.png"
+  ],
+  "meshes": [
+    "common/models/cube.json",
+    "common/models/pyramid.json"
+  ]
+}
