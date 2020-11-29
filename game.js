@@ -3,12 +3,13 @@ import Application from './common/Application.js';
 import Renderer from './Renderer.js';
 import Physics from './Physics.js';
 import Camera from './Camera.js';
+import Model from './Model.js';
 import SceneLoader from './SceneLoader.js';
 import SceneBuilder from './SceneBuilder.js';
 
 class App extends Application {
 
-    start() {
+    async start() {
         const gl = this.gl;
 
         this.renderer = new Renderer(gl);
@@ -16,16 +17,21 @@ class App extends Application {
         this.initTime = Date.now();
         this.startTime = this.time;
         this.aspect = 1;
+        this.sceneLength = 13;
+        this.tileLength = 1;
 
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);
 
-        this.load('scene.json');
+        await this.load('scene.json');
+        this.cube = this.scene.nodes[1];
     }
 
     async load(uri) {
         const scene = await new SceneLoader().loadScene('scene.json');
         const builder = new SceneBuilder(scene);
+
+        this.builder = builder;
         this.scene = builder.build();
         this.physics = new Physics(this.scene);
 
@@ -39,7 +45,25 @@ class App extends Application {
 
         this.camera.aspect = this.aspect;
         this.camera.updateProjection();
-        this.renderer.prepare(this.scene);
+        const cubeJSON = {
+            "type": "model",
+            "mesh": 0,
+            "texture": 1,
+            "aabb": {
+              "min": [-1, -0.05, -1],
+              "max": [1, 0.05, 1]
+            },
+            "translation": [0, 0, 1]
+        };
+        const cube = this.builder.createNode(cubeJSON);
+        this.camera.addChild(cube);
+
+        this.scene.addNode(cube);
+
+        
+
+        this.renderer.prepare(this.scene)
+        
     }
 
     enableCamera() {
@@ -89,6 +113,31 @@ class App extends Application {
         }
     }
 
+    addNewItems(){
+        
+        const cubeJSON = {
+            "type": "model",
+            "mesh": 0,
+            "texture": 0,
+            "aabb": {
+              "min": [-1, -0.05, -1],
+              "max": [1, 0.05, 1]
+            },
+            "translation": [0, 0, -12]
+        };
+        const cube = this.builder.createNode(cubeJSON);
+
+        
+
+        const {sceneLength, tileLength} = this;
+        cube.translation = [0, 0, - sceneLength - tileLength ];
+        cube.updateTransform();
+        this.sceneLength += tileLength;
+        this.scene.addNode(cube);
+        console.log(cube, this.scene);
+        this.renderer.prepare(this.scene);
+    }
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -96,4 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const app = new App(canvas);
     const gui = new dat.GUI();
     gui.add(app, 'enableCamera');
+
+    setInterval(()=>{
+        app.addNewItems();
+    }, 3000);
 });

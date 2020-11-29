@@ -61,7 +61,7 @@ export default class Physics {
         const diffa = vec3.sub(vec3.create(), maxb, mina);
         const diffb = vec3.sub(vec3.create(), maxa, minb);
 
-        console.log("collision", a, b);
+        // console.log("collision", a, b);
 
         let minDiff = Infinity;
         let minDirection = [0, 0, 0];
