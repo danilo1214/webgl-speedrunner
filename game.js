@@ -17,22 +17,39 @@ class App extends Application {
         this.initTime = Date.now();
         this.startTime = this.time;
         this.aspect = 1;
-        this.sceneLength = 13;
-        this.tileLength = 1;
+        this.sceneLength = 5;
+        this.tileLength = 2;
+        this.playerJSON = {
+            "type": "model",
+            "mesh": 1,
+            "texture": 1,
+            "rotation": [0.5, 0, 0],
+            "aabb": {
+              "min": [-1, -0.05, -1],
+              "max": [1, 0.05, 1]
+            },
+            "scale": [1, 1, 1],
+            "translation": [0, 1, -5]
+          };
 
         this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
         document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);
 
         await this.load('scene.json');
-        this.cube = this.scene.nodes[1];
+        this.cube = this.scene.nodes[2];
     }
 
     async load(uri) {
+
         const scene = await new SceneLoader().loadScene('scene.json');
+        
         const builder = new SceneBuilder(scene);
 
         this.builder = builder;
         this.scene = builder.build();
+        this.player = builder.createNode(this.playerJSON);
+        
+
         this.physics = new Physics(this.scene);
 
         // Find first camera.
@@ -45,24 +62,15 @@ class App extends Application {
 
         this.camera.aspect = this.aspect;
         this.camera.updateProjection();
-        const cubeJSON = {
-            "type": "model",
-            "mesh": 0,
-            "texture": 1,
-            "aabb": {
-              "min": [-1, -0.05, -1],
-              "max": [1, 0.05, 1]
-            },
-            "translation": [0, 0, 1]
-        };
-        const cube = this.builder.createNode(cubeJSON);
-        this.camera.addChild(cube);
-
-        this.scene.addNode(cube);
-
         
+        this.camera.addChild(this.player);
 
-        this.renderer.prepare(this.scene)
+        setInterval(()=>{
+            this.addNewItems();
+        }, 5000);
+
+        this.renderer.prepare(this.scene);
+        console.log(this.scene);
         
     }
 
@@ -98,6 +106,7 @@ class App extends Application {
     }
 
     render() {
+        console.log(this.scene);
         if (this.scene) {
             this.renderer.render(this.scene, this.camera);
         }
@@ -125,16 +134,26 @@ class App extends Application {
             },
             "translation": [0, 0, -12]
         };
-        const cube = this.builder.createNode(cubeJSON);
+        let cube = this.builder.createNode(cubeJSON);
 
         
 
         const {sceneLength, tileLength} = this;
         cube.translation = [0, 0, - sceneLength - tileLength ];
         cube.updateTransform();
-        this.sceneLength += tileLength;
         this.scene.addNode(cube);
-        console.log(cube, this.scene);
+
+        cube = this.builder.createNode(cubeJSON);
+        cube.translation = [2, 0, - sceneLength - tileLength ];
+        cube.updateTransform();
+        this.scene.addNode(cube);
+
+        cube = this.builder.createNode(cubeJSON);
+        cube.translation = [4, 0, - sceneLength - tileLength ];
+        cube.updateTransform();
+        this.scene.addNode(cube);
+        this.sceneLength += tileLength;
+
         this.renderer.prepare(this.scene);
     }
 
@@ -146,7 +165,5 @@ document.addEventListener('DOMContentLoaded', () => {
     const gui = new dat.GUI();
     gui.add(app, 'enableCamera');
 
-    setInterval(()=>{
-        app.addNewItems();
-    }, 3000);
+    
 });

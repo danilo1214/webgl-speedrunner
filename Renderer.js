@@ -22,7 +22,7 @@ export default class Renderer {
     }
 
     prepare(scene) {
-        scene.nodes.forEach(node => {
+        scene.traverse(node => {
             node.gl = {};
             if (node.mesh) {
                 Object.assign(node.gl, this.createModel(node.mesh));
@@ -48,11 +48,13 @@ export default class Renderer {
         mat4.invert(viewMatrix, viewMatrix);
         mat4.copy(matrix, viewMatrix);
         gl.uniformMatrix4fv(program.uniforms.uProjection, false, camera.projection);
-
+        let i = 0;
         scene.traverse(
             node => {
+                i+=1;
                 matrixStack.push(mat4.clone(matrix));
                 mat4.mul(matrix, matrix, node.transform);
+                
                 if (node.gl.vao) {
                     gl.bindVertexArray(node.gl.vao);
                     gl.uniformMatrix4fv(program.uniforms.uViewModel, false, matrix);

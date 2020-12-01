@@ -34,7 +34,7 @@ export default class Camera extends Node {
         let acc = vec3.create();
         
         vec3.add(acc, acc, forward);
-        vec3.scale(acc, acc, elapsed/100);
+        //vec3.scale(acc, acc, Math.min(elapsed, c.maxSpeed));
         vec3.scale(right,right,3);
 
         if (this.keys['KeyD']) {
@@ -120,7 +120,7 @@ Camera.defaults = {
     far              : 100,
     velocity         : [0, 0, 0],
     mouseSensitivity : 0.002,
-    maxSpeed         : 20,
+    maxSpeed         : 2,
     friction         : 0.2,
     acceleration     : 20
 };
