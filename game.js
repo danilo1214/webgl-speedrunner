@@ -67,7 +67,7 @@ class App extends Application {
 
         setInterval(()=>{
             this.addNewItems();
-        }, 5000);
+        }, 1000);
 
         this.renderer.prepare(this.scene);
         console.log(this.scene);

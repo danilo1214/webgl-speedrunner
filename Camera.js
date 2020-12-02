@@ -29,13 +29,18 @@ export default class Camera extends Node {
         const forward = vec3.set(vec3.create(),
             0,0,-1);
         const right = vec3.set(vec3.create(),1,0,0);
+        const speed = elapsed/300; //in 5 minutes reach max speed
+        vec3.scale(forward, forward, Math.min(c.maxSpeed, elapsed/50))
 
         // 1: add movement acceleration
         let acc = vec3.create();
         
         vec3.add(acc, acc, forward);
         //vec3.scale(acc, acc, Math.min(elapsed, c.maxSpeed));
-        vec3.scale(right,right,3);
+
+        
+
+        vec3.scale(right,right,3*c.maxSpeed);
 
         if (this.keys['KeyD']) {
             vec3.add(acc, acc, right);
@@ -49,6 +54,7 @@ export default class Camera extends Node {
         
 
         vec3.scale(c.velocity, c.velocity, 1 - c.friction);
+
         // 3: if no movement, apply friction
         /*if (!this.keys['KeyW'] &&
             !this.keys['KeyS'] &&
@@ -82,25 +88,7 @@ export default class Camera extends Node {
     }
 
     mousemoveHandler(e) {
-        const dx = e.movementX;
-        const dy = e.movementY;
-        const c = this;
-
-        c.rotation[0] -= dy * c.mouseSensitivity;
-        c.rotation[1] -= dx * c.mouseSensitivity;
-
-        const pi = Math.PI;
-        const twopi = pi * 2;
-        const halfpi = pi / 2;
-
-        if (c.rotation[0] > halfpi) {
-            c.rotation[0] = halfpi;
-        }
-        if (c.rotation[0] < -halfpi) {
-            c.rotation[0] = -halfpi;
-        }
-
-        c.rotation[1] = ((c.rotation[1] % twopi) + twopi) % twopi;
+        //console.log("mousemove");
     }
 
     keydownHandler(e) {
