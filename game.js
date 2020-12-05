@@ -13,6 +13,7 @@ class App extends Application {
         const gl = this.gl;
 
         this.renderer = new Renderer(gl);
+        this.score = 0;
         this.time = Date.now();
         this.initTime = Date.now();
         this.startTime = this.time;
@@ -37,6 +38,10 @@ class App extends Application {
 
         await this.load('scene.json');
         this.cube = this.scene.nodes[2];
+    }
+    
+    setScoreElement(score){
+        this.scoreEl = score;
     }
 
     async load(uri) {
@@ -93,6 +98,7 @@ class App extends Application {
     update() {
         const t = this.time = Date.now();
         const dt = (this.time - this.startTime) * 0.001;
+        this.score += dt;
         const elapsed = (this.time - this.initTime) * 0.001;
         this.startTime = this.time;
 
@@ -109,6 +115,9 @@ class App extends Application {
         console.log(this.scene);
         if (this.scene) {
             this.renderer.render(this.scene, this.camera);
+        }
+        if(this.scoreEl){
+            this.scoreEl.innerHTML = this.score.toFixed(0);
         }
     }
 
@@ -161,7 +170,12 @@ class App extends Application {
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
+    const score = document.getElementById('#score');
+
+
     const app = new App(canvas);
+    app.setScoreElement(score);
+
     const gui = new dat.GUI();
     gui.add(app, 'enableCamera');
 
