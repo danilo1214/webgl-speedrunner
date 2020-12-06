@@ -30,6 +30,7 @@
   ],
   "meshes": [
     "common/models/cube.json",
-    "common/models/pyramid.json"
+    "common/models/pyramid.json",
+    "common/models/wall.json"
   ]
 }

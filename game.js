@@ -112,7 +112,6 @@ class App extends Application {
     }
 
     render() {
-        console.log(this.scene);
         if (this.scene) {
             this.renderer.render(this.scene, this.camera);
         }
@@ -143,6 +142,17 @@ class App extends Application {
             },
             "translation": [0, 0, -12]
         };
+
+        const cubeWallJSON = {
+            "type": "model",
+            "mesh": 2,
+            "texture": 0,
+            "aabb": {
+              "min": [-1, -3, -1],
+              "max": [1, 3, 1]
+            },
+            "translation": [0, 0, -12]
+        };
         let cube = this.builder.createNode(cubeJSON);
 
         
@@ -161,6 +171,12 @@ class App extends Application {
         cube.translation = [4, 0, - sceneLength - tileLength ];
         cube.updateTransform();
         this.scene.addNode(cube);
+
+        cube = this.builder.createNode(cubeWallJSON);
+        cube.translation = [4, 0, - sceneLength - tileLength ];
+        cube.updateTransform();
+        this.scene.addNode(cube);
+
         this.sceneLength += tileLength;
 
         this.renderer.prepare(this.scene);
