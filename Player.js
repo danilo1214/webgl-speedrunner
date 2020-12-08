@@ -42,7 +42,7 @@ export default class Player extends Model {
 
         // 2: update velocity
         const speed = Math.min(elapsed, p.maxSpeed);
-        vec3.scaleAndAdd(p.velocity, p.velocity, acc, dt * speed);
+        vec3.scaleAndAdd(p.velocity, p.velocity, acc, (dt> 0.7 ? 0.7 : dt) * speed);
 
         
 
