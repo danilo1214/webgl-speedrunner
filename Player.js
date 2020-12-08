@@ -1,18 +1,15 @@
 import Utils from './Utils.js';
-import Node from './Node.js';
+import Model from './Model.js';
 
 const mat4 = glMatrix.mat4;
 const vec3 = glMatrix.vec3;
 
-export default class Camera extends Node {
+export default class Player extends Model {
 
-    constructor(options) {
-        super(options);
+    constructor(mesh, texture, options) {
+        super(mesh, texture, options);
+        console.log(this);
         Utils.init(this, this.constructor.defaults, options);
-
-        this.projection = mat4.create();
-        this.updateProjection();
-
         
         this.keydownHandler = this.keydownHandler.bind(this);
         this.keyupHandler = this.keyupHandler.bind(this);
@@ -20,7 +17,7 @@ export default class Camera extends Node {
     }
 
     update(dt, elapsed) {
-        const c = this;
+        const p = this;
 
         const forward = vec3.set(vec3.create(),
             0,0,-1);
@@ -34,7 +31,7 @@ export default class Camera extends Node {
 
         
 
-        vec3.scale(right,right,3*c.maxSpeed);
+        vec3.scale(right,right,3*p.maxSpeed);
 
         if (this.keys['KeyD']) {
             vec3.add(acc, acc, right);
@@ -42,14 +39,14 @@ export default class Camera extends Node {
         if (this.keys['KeyA']) {
             vec3.sub(acc, acc, right);
         }
-        vec3.scale(acc, acc, Math.min(elapsed, c.maxSpeed));
 
         // 2: update velocity
-        vec3.scaleAndAdd(c.velocity, c.velocity, acc, dt * c.acceleration);
+        const speed = Math.min(elapsed, p.maxSpeed);
+        vec3.scaleAndAdd(p.velocity, p.velocity, acc, dt * speed);
 
         
 
-        vec3.scale(c.velocity, c.velocity, 1 - c.friction);
+        vec3.scale(p.velocity, p.velocity, 1 - p.friction);
 
         // 3: if no movement, apply friction
         /*if (!this.keys['KeyW'] &&
@@ -61,32 +58,25 @@ export default class Camera extends Node {
         }*/
 
         // 4: limit speed
-        console.log(c.velocity);
 
-        const len = vec3.len(c.velocity);
-        if (len > c.maxSpeed) {
-            vec3.scale(c.velocity, c.velocity, c.maxSpeed / len);
+        const len = vec3.len(p.velocity);
+        if (len > p.maxSpeed) {
+            vec3.scale(p.velocity, p.velocity, p.maxSpeed / len);
         }
     }
 
     enable() {
-        document.addEventListener('mousemove', this.mousemoveHandler);
         document.addEventListener('keydown', this.keydownHandler);
         document.addEventListener('keyup', this.keyupHandler);
     }
 
     disable() {
-        document.removeEventListener('mousemove', this.mousemoveHandler);
         document.removeEventListener('keydown', this.keydownHandler);
         document.removeEventListener('keyup', this.keyupHandler);
 
         for (let key in this.keys) {
             this.keys[key] = false;
         }
-    }
-
-    mousemoveHandler(e) {
-        //console.log("mousemove");
     }
 
     keydownHandler(e) {
@@ -99,14 +89,9 @@ export default class Camera extends Node {
 
 }
 
-Camera.defaults = {
-    aspect           : 1,
-    fov              : 1.5,
-    near             : 0.01,
-    far              : 100,
+Player.defaults = {
     velocity         : [0, 0, 0],
-    mouseSensitivity : 0.002,
-    maxSpeed         : 3,
+    maxSpeed         : 25,
     minSpeed         : 1,
     friction         : 0.2,
     acceleration     : 20

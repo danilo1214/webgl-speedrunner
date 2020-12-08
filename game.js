@@ -21,23 +21,21 @@ class App extends Application {
         this.sceneLength = 5;
         this.tileLength = 2;
         this.playerJSON = {
-            "type": "model",
-            "mesh": 1,
+            "type": "player",
+            "mesh": 0,
             "texture": 1,
-            "rotation": [0.5, 0, 0],
+            "rotation": [0, 0, 0],
             "aabb": {
               "min": [-1, -0.05, -1],
               "max": [1, 0.05, 1]
             },
             "scale": [1, 1, 1],
-            "translation": [0, 1, -5]
+            "translation": [0, 1,0]
           };
-
-        this.pointerlockchangeHandler = this.pointerlockchangeHandler.bind(this);
-        document.addEventListener('pointerlockchange', this.pointerlockchangeHandler);
 
         await this.load('scene.json');
         this.cube = this.scene.nodes[2];
+        this.player.enable();
     }
     
     setScoreElement(score){
@@ -53,6 +51,7 @@ class App extends Application {
         this.builder = builder;
         this.scene = builder.build();
         this.player = builder.createNode(this.playerJSON);
+        this.scene.addNode(this.player);
         
 
         this.physics = new Physics(this.scene);
@@ -64,11 +63,12 @@ class App extends Application {
                 this.camera = node;
             }
         });
+        this.player.addChild(this.camera);
 
         this.camera.aspect = this.aspect;
+
         this.camera.updateProjection();
         
-        this.camera.addChild(this.player);
 
         setInterval(()=>{
             this.addNewItems();
@@ -79,22 +79,6 @@ class App extends Application {
         
     }
 
-    enableCamera() {
-        this.canvas.requestPointerLock();
-    }
-
-    pointerlockchangeHandler() {
-        if (!this.camera) {
-            return;
-        }
-
-        if (document.pointerLockElement === this.canvas) {
-            this.camera.enable();
-        } else {
-            this.camera.disable();
-        }
-    }
-
     update() {
         const t = this.time = Date.now();
         const dt = (this.time - this.startTime) * 0.001;
@@ -102,8 +86,8 @@ class App extends Application {
         const elapsed = (this.time - this.initTime) * 0.001;
         this.startTime = this.time;
 
-        if (this.camera) {
-            this.camera.update(dt, elapsed);
+        if (this.player) {
+            this.player.update(dt, elapsed);
         }
 
         if (this.physics) {
@@ -193,7 +177,5 @@ document.addEventListener('DOMContentLoaded', () => {
     app.setScoreElement(score);
 
     const gui = new dat.GUI();
-    gui.add(app, 'enableCamera');
-
     
 });
