@@ -1,3 +1,6 @@
+import Obstacle from "./Obstacle.js";
+import Player from "./Player.js";
+
 const vec3 = glMatrix.vec3;
 const mat4 = glMatrix.mat4;
 
@@ -54,6 +57,11 @@ export default class Physics {
         });
 
         if (!isColliding) {
+            return;
+        }
+
+        if(a instanceof Player && b instanceof Obstacle){
+            console.log("Obstacleeee");
             return;
         }
 

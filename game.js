@@ -9,6 +9,8 @@ import SceneBuilder from './SceneBuilder.js';
 
 class App extends Application {
 
+
+
     async start() {
         const gl = this.gl;
 
@@ -20,6 +22,35 @@ class App extends Application {
         this.aspect = 1;
         this.sceneLength = 5;
         this.tileLength = 2;
+
+        await this.initModels();
+        await this.load('scene.json');
+        this.player.enable();
+    }
+
+    initModels(){
+        this.cubeJSON = {
+            "type": "model",
+            "mesh": 0,
+            "texture": 0,
+            "aabb": {
+              "min": [-1, -0.05, -1],
+              "max": [1, 0.05, 1]
+            },
+            "translation": [0, 0, -12]
+        };
+
+        this.cubeWallJSON = {
+            "type": "model",
+            "mesh": 2,
+            "texture": 0,
+            "aabb": {
+              "min": [-1, -3, -1],
+              "max": [1, 3, 1]
+            },
+            "translation": [0, 0, -12]
+        };
+
         this.playerJSON = {
             "type": "player",
             "mesh": 0,
@@ -33,9 +64,17 @@ class App extends Application {
             "translation": [0, 1,0]
           };
 
-        await this.load('scene.json');
-        this.cube = this.scene.nodes[2];
-        this.player.enable();
+        this.obstacleJSON = {
+            "type": "obstacle",
+            "mesh": 3,
+            "texture": 0,
+            "rotation": [0,0,0],
+            "aabb": {
+                "min": [-1, -1, -1],
+                "max": [1, 1, 1]
+              },
+            "translation": [0, 0,-3]
+        }
     }
     
     setScoreElement(score){
@@ -51,7 +90,10 @@ class App extends Application {
         this.builder = builder;
         this.scene = builder.build();
         this.player = builder.createNode(this.playerJSON);
+        this.obstacle = builder.createNode(this.obstacleJSON);
         this.scene.addNode(this.player);
+        this.scene.addNode(this.obstacle);
+
         
 
         this.physics = new Physics(this.scene);
@@ -74,9 +116,7 @@ class App extends Application {
             this.addNewItems();
         }, 1000);
 
-        this.renderer.prepare(this.scene);
-        console.log(this.scene);
-        
+        this.renderer.prepare(this.scene);        
     }
 
     update() {
@@ -116,27 +156,7 @@ class App extends Application {
 
     addNewItems(){
         
-        const cubeJSON = {
-            "type": "model",
-            "mesh": 0,
-            "texture": 0,
-            "aabb": {
-              "min": [-1, -0.05, -1],
-              "max": [1, 0.05, 1]
-            },
-            "translation": [0, 0, -12]
-        };
-
-        const cubeWallJSON = {
-            "type": "model",
-            "mesh": 2,
-            "texture": 0,
-            "aabb": {
-              "min": [-1, -3, -1],
-              "max": [1, 3, 1]
-            },
-            "translation": [0, 0, -12]
-        };
+        const {cubeJSON, cubeWallJSON} = this;
         let cube = this.builder.createNode(cubeJSON);
 
         

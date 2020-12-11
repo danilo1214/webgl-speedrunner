@@ -2,6 +2,7 @@ import Mesh from './Mesh.js';
 
 import Node from './Node.js';
 import Model from './Model.js';
+import Obstacle from './Obstacle.js';
 import Camera from './Camera.js';
 
 import Scene from './Scene.js';
@@ -19,6 +20,7 @@ export default class SceneBuilder {
         switch (spec.type) {
             case 'camera':  return new Camera(spec);
             case 'player':  return new Player(mesh, texture, spec);
+            case 'obstacle':  return new Obstacle(mesh, texture, spec);
             case 'model' :  return new Model(mesh, texture, spec);
             
             default: return new Node(spec);

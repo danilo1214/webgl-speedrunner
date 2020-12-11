@@ -41,12 +41,13 @@ export default class Player extends Model {
         }
 
         // 2: update velocity
-        const speed = Math.min(elapsed, p.maxSpeed);
-        vec3.scaleAndAdd(p.velocity, p.velocity, acc, (dt> 0.7 ? 0.7 : dt) * speed);
+        const speed = Math.min(elapsed*p.maxSpeed/360, p.maxSpeed);
+        vec3.scale(acc, acc, (dt> 0.7 ? 0.7 : dt) * speed );
+        vec3.add(p.translation, p.translation, acc);
 
         
 
-        vec3.scale(p.velocity, p.velocity, 1 - p.friction);
+        //vec3.scale(p.velocity, p.velocity, 1 - p.friction);
 
         // 3: if no movement, apply friction
         /*if (!this.keys['KeyW'] &&
@@ -59,10 +60,12 @@ export default class Player extends Model {
 
         // 4: limit speed
 
-        const len = vec3.len(p.velocity);
+        //const len = vec3.len(p.velocity);
+        /*
         if (len > p.maxSpeed) {
             vec3.scale(p.velocity, p.velocity, p.maxSpeed / len);
         }
+        */
     }
 
     enable() {
@@ -91,7 +94,7 @@ export default class Player extends Model {
 
 Player.defaults = {
     velocity         : [0, 0, 0],
-    maxSpeed         : 25,
+    maxSpeed         : 5,
     minSpeed         : 1,
     friction         : 0.2,
     acceleration     : 20
