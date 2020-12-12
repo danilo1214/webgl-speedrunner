@@ -21,7 +21,7 @@ class App extends Application {
         this.startTime = this.time;
         this.aspect = 1;
         this.sceneLength = 5;
-        this.tileLength = 2;
+        this.tileLength = 12;
 
         await this.initModels();
         await this.load('scene.json');
@@ -29,13 +29,13 @@ class App extends Application {
     }
 
     initModels(){
-        this.cubeJSON = {
+        this.roadJSON = {
             "type": "model",
             "mesh": 0,
-            "texture": 0,
+            "texture": 2,
             "aabb": {
-              "min": [-1, -0.05, -1],
-              "max": [1, 0.05, 1]
+              "min": [-2, -0.05, -6],
+              "max": [2, 0.05, 6]
             },
             "translation": [0, 0, -12]
         };
@@ -53,12 +53,12 @@ class App extends Application {
 
         this.playerJSON = {
             "type": "player",
-            "mesh": 0,
+            "mesh": 3,
             "texture": 1,
             "rotation": [0, 0, 0],
             "aabb": {
-              "min": [-1, -0.05, -1],
-              "max": [1, 0.05, 1]
+                "min": [-1, -1, -1],
+                "max": [1, 1, 1]
             },
             "scale": [1, 1, 1],
             "translation": [0, 1,0]
@@ -156,23 +156,13 @@ class App extends Application {
 
     addNewItems(){
         
-        const {cubeJSON, cubeWallJSON} = this;
-        let cube = this.builder.createNode(cubeJSON);
+        const {roadJSON, cubeWallJSON} = this;
+        let cube = this.builder.createNode(roadJSON);
 
         
 
         const {sceneLength, tileLength} = this;
         cube.translation = [0, 0, - sceneLength - tileLength ];
-        cube.updateTransform();
-        this.scene.addNode(cube);
-
-        cube = this.builder.createNode(cubeJSON);
-        cube.translation = [2, 0, - sceneLength - tileLength ];
-        cube.updateTransform();
-        this.scene.addNode(cube);
-
-        cube = this.builder.createNode(cubeJSON);
-        cube.translation = [4, 0, - sceneLength - tileLength ];
         cube.updateTransform();
         this.scene.addNode(cube);
 
