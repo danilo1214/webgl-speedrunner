@@ -1,13 +1,15 @@
 import Obstacle from "./Obstacle.js";
 import Player from "./Player.js";
+import Powerup from "./Powerup.js";
 
 const vec3 = glMatrix.vec3;
 const mat4 = glMatrix.mat4;
 
 export default class Physics {
 
-    constructor(scene) {
+    constructor(scene, app) {
         this.scene = scene;
+        this.app = app;
     }
 
     update(dt) {
@@ -61,7 +63,16 @@ export default class Physics {
         }
 
         if(a instanceof Player && b instanceof Obstacle){
-            console.log("Obstacleeee");
+            const index = this.scene.nodes.indexOf(b);
+            this.scene.nodes.splice(index, 1);
+            this.app.addPoints(-25);
+            return;
+        }
+
+        if(a instanceof Player && b instanceof Powerup){
+            const index = this.scene.nodes.indexOf(b);
+            this.scene.nodes.splice(index, 1);
+            this.app.addPoints(25);
             return;
         }
 

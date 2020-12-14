@@ -1,3 +1,4 @@
+import Powerup from './Powerup.js';
 import Utils from './Utils.js';
 
 const vec3 = glMatrix.vec3;

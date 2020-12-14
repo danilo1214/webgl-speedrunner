@@ -1,5 +1,6 @@
 import * as WebGL from './WebGL.js';
 import shaders from './shaders.js';
+import Powerup from './Powerup.js';
 
 const mat4 = glMatrix.mat4;
 

@@ -7,6 +7,7 @@ import Camera from './Camera.js';
 
 import Scene from './Scene.js';
 import Player from './Player.js';
+import Powerup from './Powerup.js';
 
 export default class SceneBuilder {
 
@@ -21,6 +22,7 @@ export default class SceneBuilder {
             case 'camera':  return new Camera(spec);
             case 'player':  return new Player(mesh, texture, spec);
             case 'obstacle':  return new Obstacle(mesh, texture, spec);
+            case 'powerup':  return new Powerup(mesh, texture, spec);
             case 'model' :  return new Model(mesh, texture, spec);
             
             default: return new Node(spec);

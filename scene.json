@@ -27,7 +27,9 @@
   "textures": [
     "common/images/crate-diffuse.png",
     "common/images/grass.png",
-    "common/images/road.jpg"
+    "common/images/road.jpg",
+    "common/images/health.png"
+
   ],
   "meshes": [
     "common/models/road.json",

@@ -6,6 +6,8 @@ import Camera from './Camera.js';
 import Model from './Model.js';
 import SceneLoader from './SceneLoader.js';
 import SceneBuilder from './SceneBuilder.js';
+import Obstacle from './Obstacle.js';
+import Powerup from './Powerup.js';
 
 class App extends Application {
 
@@ -60,7 +62,6 @@ class App extends Application {
                 "min": [-1, -1, -1],
                 "max": [1, 1, 1]
             },
-            "scale": [1, 1, 1],
             "translation": [0, 1,0]
           };
 
@@ -74,6 +75,18 @@ class App extends Application {
                 "max": [1, 1, 1]
               },
             "translation": [0, 0,-3]
+        }
+
+        this.powerUpJSON = {
+            "type": "powerup",
+            "mesh": 3,
+            "texture": 3,
+            "rotation": [0,0,0],
+            "aabb": {
+                "min": [-1, -1, -1],
+                "max": [1, 1, 1]
+              },
+            "translation": [0, 0,-15]
         }
     }
     
@@ -91,12 +104,16 @@ class App extends Application {
         this.scene = builder.build();
         this.player = builder.createNode(this.playerJSON);
         this.obstacle = builder.createNode(this.obstacleJSON);
+        this.powerup = builder.createNode(this.powerUpJSON);
+
         this.scene.addNode(this.player);
         this.scene.addNode(this.obstacle);
+        this.scene.addNode(this.powerup);
+
 
         
 
-        this.physics = new Physics(this.scene);
+        this.physics = new Physics(this.scene, this);
 
         // Find first camera.
         this.camera = null;
@@ -119,6 +136,10 @@ class App extends Application {
         this.renderer.prepare(this.scene);        
     }
 
+    addPoints(val){
+        this.score += val;
+    }
+
     update() {
         const t = this.time = Date.now();
         const dt = (this.time - this.startTime) * 0.001;
@@ -132,6 +153,14 @@ class App extends Application {
 
         if (this.physics) {
             this.physics.update(dt);
+        }
+
+        if(this.scene){
+            this.scene.traverse(node=>{
+                if(node instanceof Obstacle || node instanceof Powerup){
+                    node.update(dt);
+                }
+            })
         }
     }
 

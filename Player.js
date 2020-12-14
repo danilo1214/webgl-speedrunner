@@ -31,7 +31,7 @@ export default class Player extends Model {
 
         
 
-        vec3.scale(right,right,3*p.maxSpeed);
+        vec3.scale(right,right,p.maxSpeed);
 
         if (this.keys['KeyD']) {
             vec3.add(acc, acc, right);
@@ -41,7 +41,7 @@ export default class Player extends Model {
         }
 
         // 2: update velocity
-        const speed = Math.min(elapsed*p.maxSpeed/360, p.maxSpeed);
+        const speed = Math.min(Math.max(elapsed*p.maxSpeed/360, p.minSpeed), p.maxSpeed);
         vec3.scale(acc, acc, (dt> 0.7 ? 0.7 : dt) * speed );
         vec3.add(p.translation, p.translation, acc);
 
@@ -95,7 +95,7 @@ export default class Player extends Model {
 Player.defaults = {
     velocity         : [0, 0, 0],
     maxSpeed         : 5,
-    minSpeed         : 1,
+    minSpeed         : 2,
     friction         : 0.2,
     acceleration     : 20
 };
