@@ -24,6 +24,13 @@ export default class Physics {
                 });
             }
         });
+
+    }
+
+    gravity(dt, player){
+        vec3.scaleAndAdd(player.translation, player.translation,[0,-1, 0], dt);
+        console.log(player.translation);
+        player.updateTransform();
     }
 
     intervalIntersection(min1, max1, min2, max2) {

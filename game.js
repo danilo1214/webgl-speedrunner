@@ -47,8 +47,8 @@ class App extends Application {
             "mesh": 2,
             "texture": 0,
             "aabb": {
-              "min": [-1, -3, -1],
-              "max": [1, 3, 1]
+              "min": [-1, -3, -6],
+              "max": [1, 3, 6]
             },
             "translation": [0, 0, -12]
         };
@@ -62,7 +62,7 @@ class App extends Application {
                 "min": [-1, -1, -1],
                 "max": [1, 1, 1]
             },
-            "translation": [0, 1,0]
+            "translation": [0, 3,-1]
           };
 
         this.obstacleJSON = {
@@ -153,6 +153,8 @@ class App extends Application {
 
         if (this.physics) {
             this.physics.update(dt);
+
+            this.physics.gravity(dt, this.player);
         }
 
         if(this.scene){
@@ -186,21 +188,32 @@ class App extends Application {
     addNewItems(){
         
         const {roadJSON, cubeWallJSON} = this;
-        let cube = this.builder.createNode(roadJSON);
+        let road = this.builder.createNode(roadJSON);
 
         
 
         const {sceneLength, tileLength} = this;
-        cube.translation = [0, 0, - sceneLength - tileLength ];
-        cube.updateTransform();
-        this.scene.addNode(cube);
+        road.translation = [0, 0, - sceneLength - tileLength ];
+        road.updateTransform();
+        this.scene.addNode(road);
 
-        cube = this.builder.createNode(cubeWallJSON);
-        cube.translation = [4, 0, - sceneLength - tileLength ];
-        cube.updateTransform();
-        this.scene.addNode(cube);
+        road = this.builder.createNode(roadJSON);
+        road.translation = [4, 0, - sceneLength - tileLength ];
+        road.updateTransform();
+        this.scene.addNode(road);
 
         this.sceneLength += tileLength;
+
+        let wall = this.builder.createNode(cubeWallJSON);
+        wall.translation = [7, 0, - sceneLength - tileLength ];
+        wall.updateTransform();
+        this.scene.addNode(wall);
+
+        wall = this.builder.createNode(cubeWallJSON);
+        wall.translation = [-3, 0, - sceneLength - tileLength ];
+        wall.updateTransform();
+        this.scene.addNode(wall);
+
 
         this.renderer.prepare(this.scene);
     }
