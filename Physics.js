@@ -28,7 +28,7 @@ export default class Physics {
     }
 
     gravity(dt, player){
-        vec3.scaleAndAdd(player.translation, player.translation,[0,-1, 0], dt);
+        vec3.scaleAndAdd(player.velocity, player.velocity,[0,-1, 0], dt>0.3? 0.3 : dt);
         console.log(player.translation);
         player.updateTransform();
     }

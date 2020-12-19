@@ -187,7 +187,7 @@ class App extends Application {
 
     addNewItems(){
         
-        const {roadJSON, cubeWallJSON} = this;
+        const {roadJSON, cubeWallJSON, obstacleJSON, powerUpJSON} = this;
         let road = this.builder.createNode(roadJSON);
 
         
@@ -214,7 +214,15 @@ class App extends Application {
         wall.updateTransform();
         this.scene.addNode(wall);
 
+        const obstacle = this.builder.createNode(obstacleJSON);
+        obstacle.translation = [Math.random()*8, Math.random()*2, -sceneLength - tileLength - Math.random()*tileLength];
+        obstacle.updateTransform();
+        this.scene.addNode(obstacle);
 
+        const powerup = this.builder.createNode(powerUpJSON);
+        powerup.translation = [Math.random()*8, Math.random()*2, -sceneLength - tileLength - Math.random()*tileLength];
+        powerup.updateTransform();
+        this.scene.addNode(powerup);
         this.renderer.prepare(this.scene);
     }
 
