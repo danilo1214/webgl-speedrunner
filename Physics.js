@@ -28,8 +28,7 @@ export default class Physics {
     }
 
     gravity(dt, player){
-        vec3.scaleAndAdd(player.velocity, player.velocity,[0,-1, 0], dt>0.3? 0.3 : dt);
-        console.log(player.translation);
+        vec3.scaleAndAdd(player.velocity, player.velocity,[0,-0.1, 0], dt>0.3? 0.3 : dt);
         player.updateTransform();
     }
 
@@ -81,6 +80,11 @@ export default class Physics {
             this.scene.nodes.splice(index, 1);
             this.app.addPoints(25);
             return;
+        }
+
+        if(a instanceof Player && this.intervalIntersection(mina[1], maxa[1], minb[1], maxb[1])){
+            a.velocity[1] = 0;
+
         }
 
         // Move node A minimally to avoid collision.
