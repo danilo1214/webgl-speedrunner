@@ -38,7 +38,8 @@
     "common/images/crate-diffuse.png",
     "common/images/grass.png",
     "common/images/road.jpg",
-    "common/images/health.png"
+    "common/images/health.png",
+    "common/images/virus.png"
 
   ],
   "meshes": [

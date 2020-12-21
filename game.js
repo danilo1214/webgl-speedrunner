@@ -8,6 +8,7 @@ import SceneLoader from './SceneLoader.js';
 import SceneBuilder from './SceneBuilder.js';
 import Obstacle from './Obstacle.js';
 import Powerup from './Powerup.js';
+import Player from './Player.js';
 
 class App extends Application {
 
@@ -68,7 +69,7 @@ class App extends Application {
         this.obstacleJSON = {
             "type": "obstacle",
             "mesh": 3,
-            "texture": 0,
+            "texture": 4,
             "rotation": [0,0,0],
             "aabb": {
                 "min": [-1, -1, -1],
@@ -185,8 +186,37 @@ class App extends Application {
         }
     }
 
+    deletePassed(){
+        let {scene} = this;
+        const toDelete = [];
+
+        for(let i = 0; i < scene.nodes.length; i++){
+            const node = scene.nodes[i];
+            if(node instanceof Powerup || (node instanceof Model && !( node instanceof Player) && !(node instanceof Camera)) || node instanceof Obstacle){
+                
+                const transform = node.getGlobalTransform();
+                const playerTransform = this.player.getGlobalTransform();
+                const zp = playerTransform[14];
+                const zt = transform[14];
+
+                if(Math.abs(zp - zt) >= this.tileLength && zp < zt){
+                    toDelete.push(i);
+                }
+
+            }
+        }
+
+        for (let i = toDelete.length -1; i >= 0; i--){
+            this.scene.nodes.splice(toDelete[i], 1);
+            console.log("delete")
+        }
+    
+    }
+
     addNewItems(){
-        
+
+        this.deletePassed();
+
         const {roadJSON, cubeWallJSON, obstacleJSON, powerUpJSON} = this;
         let road = this.builder.createNode(roadJSON);
 
