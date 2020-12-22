@@ -21,7 +21,17 @@ export default class Renderer {
             data   : new Uint8Array([255, 255, 255, 255])
         });
     }
-
+    prepareNodes(nodes){
+        nodes.forEach(node => {
+            node.gl = {};
+            if (node.mesh) {
+                Object.assign(node.gl, this.createModel(node.mesh));
+            }
+            if (node.image) {
+                node.gl.texture = this.createTexture(node.image);
+            }
+        });
+    }
     prepare(scene) {
         scene.traverse(node => {
             node.gl = {};

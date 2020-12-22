@@ -104,12 +104,8 @@ class App extends Application {
         this.builder = builder;
         this.scene = builder.build();
         this.player = builder.createNode(this.playerJSON);
-        this.obstacle = builder.createNode(this.obstacleJSON);
-        this.powerup = builder.createNode(this.powerUpJSON);
 
         this.scene.addNode(this.player);
-        this.scene.addNode(this.obstacle);
-        this.scene.addNode(this.powerup);
 
 
         
@@ -217,32 +213,32 @@ class App extends Application {
 
         this.deletePassed();
 
-        const {roadJSON, cubeWallJSON, obstacleJSON, powerUpJSON} = this;
-        let road = this.builder.createNode(roadJSON);
+        const {roadJSON, cubeWallJSON, obstacleJSON, powerUpJSON, sceneLength, tileLength} = this;
+
+        const road = this.builder.createNode(roadJSON);
 
         
 
-        const {sceneLength, tileLength} = this;
         road.translation = [0, 0, - sceneLength - tileLength ];
         road.updateTransform();
         this.scene.addNode(road);
 
-        road = this.builder.createNode(roadJSON);
-        road.translation = [4, 0, - sceneLength - tileLength ];
-        road.updateTransform();
-        this.scene.addNode(road);
+        const road1 = this.builder.createNode(roadJSON);
+        road1.translation = [4, 0, - sceneLength - tileLength ];
+        road1.updateTransform();
+        this.scene.addNode(road1);
 
         this.sceneLength += tileLength;
 
-        let wall = this.builder.createNode(cubeWallJSON);
+        const wall = this.builder.createNode(cubeWallJSON);
         wall.translation = [7, 0, - sceneLength - tileLength ];
         wall.updateTransform();
         this.scene.addNode(wall);
 
-        wall = this.builder.createNode(cubeWallJSON);
-        wall.translation = [-3, 0, - sceneLength - tileLength ];
-        wall.updateTransform();
-        this.scene.addNode(wall);
+        const wall1 = this.builder.createNode(cubeWallJSON);
+        wall1.translation = [-3, 0, - sceneLength - tileLength ];
+        wall1.updateTransform();
+        this.scene.addNode(wall1);
 
         const obstacle = this.builder.createNode(obstacleJSON);
         obstacle.translation = [Math.random()*8, Math.random()*2, -sceneLength - tileLength - Math.random()*tileLength];
@@ -253,7 +249,7 @@ class App extends Application {
         powerup.translation = [Math.random()*8, Math.random()*2, -sceneLength - tileLength - Math.random()*tileLength];
         powerup.updateTransform();
         this.scene.addNode(powerup);
-        this.renderer.prepare(this.scene);
+        this.renderer.prepareNodes([obstacle, powerup, wall, wall1, road, road1]);
     }
 
 }
