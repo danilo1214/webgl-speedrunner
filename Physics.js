@@ -1,3 +1,4 @@
+import Camera from "./Camera.js";
 import Obstacle from "./Obstacle.js";
 import Player from "./Player.js";
 import Powerup from "./Powerup.js";
@@ -28,7 +29,8 @@ export default class Physics {
     }
 
     gravity(dt, player){
-        vec3.scaleAndAdd(player.velocity, player.velocity,[0,-0.1, 0], dt>0.3? 0.3 : dt);
+        const {jumping} = player;
+        vec3.scaleAndAdd(player.velocity, player.velocity,[0,jumping? 130: -30, 0], dt>0.3? 0.3 : dt);
         player.updateTransform();
     }
 
@@ -64,7 +66,7 @@ export default class Physics {
             max: maxb
         });
 
-        if (!isColliding) {
+        if (!isColliding || a instanceof Camera) {
             return;
         }
 
@@ -82,9 +84,9 @@ export default class Physics {
             return;
         }
 
-        if(a instanceof Player && this.intervalIntersection(mina[1], maxa[1], minb[1], maxb[1])){
+        if(a instanceof Player && !a.jumping && this.intervalIntersection(mina[1], maxa[1], minb[1], maxb[1])){
             a.velocity[1] = 0;
-
+            a.landed = true;
         }
 
         // Move node A minimally to avoid collision.

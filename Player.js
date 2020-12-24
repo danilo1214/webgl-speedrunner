@@ -14,6 +14,8 @@ export default class Player extends Model {
         this.keydownHandler = this.keydownHandler.bind(this);
         this.keyupHandler = this.keyupHandler.bind(this);
         this.keys = {};
+        this.jumping = false;
+        this.landed = false;
     }
 
     update(dt, elapsed) {
@@ -35,6 +37,13 @@ export default class Player extends Model {
 
         if (this.keys['KeyD']) {
             vec3.add(acc, acc, right);
+        }
+        if (this.keys['Space'] && this.landed) {
+            this.jumping = true;
+            this.landed = false;
+            setTimeout(()=>{
+                this.jumping = false;
+            }, 135); //
         }
         if (this.keys['KeyA']) {
             vec3.sub(acc, acc, right);

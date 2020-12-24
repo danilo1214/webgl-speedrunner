@@ -63,7 +63,7 @@ class App extends Application {
                 "min": [-1, -1, -1],
                 "max": [1, 1, 1]
             },
-            "translation": [0, 3,-1]
+            "translation": [0, 5,-1]
           };
 
         this.obstacleJSON = {
@@ -241,12 +241,12 @@ class App extends Application {
         this.scene.addNode(wall1);
 
         const obstacle = this.builder.createNode(obstacleJSON);
-        obstacle.translation = [Math.random()*8, Math.random()*2, -sceneLength - tileLength - Math.random()*tileLength];
+        obstacle.translation = [Math.random()*8 -1,1+ Math.random()*4, -sceneLength - tileLength - Math.random()*tileLength -1];
         obstacle.updateTransform();
         this.scene.addNode(obstacle);
 
         const powerup = this.builder.createNode(powerUpJSON);
-        powerup.translation = [Math.random()*8, Math.random()*2, -sceneLength - tileLength - Math.random()*tileLength];
+        powerup.translation = [Math.random()*8, 1 + Math.random()*4, -sceneLength - tileLength - Math.random()*tileLength];
         powerup.updateTransform();
         this.scene.addNode(powerup);
         this.renderer.prepareNodes([obstacle, powerup, wall, wall1, road, road1]);
