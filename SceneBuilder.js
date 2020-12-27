@@ -8,6 +8,7 @@ import Camera from './Camera.js';
 import Scene from './Scene.js';
 import Player from './Player.js';
 import Powerup from './Powerup.js';
+import Light from './Light.js';
 
 export default class SceneBuilder {
 
@@ -19,6 +20,7 @@ export default class SceneBuilder {
         const mesh = new Mesh(this.spec.meshes[spec.mesh]);
         const texture = this.spec.textures[spec.texture];
         switch (spec.type) {
+            case 'light':  return new Light(spec);
             case 'camera':  return new Camera(spec);
             case 'player':  return new Player(mesh, texture, spec);
             case 'obstacle':  return new Obstacle(mesh, texture, spec);

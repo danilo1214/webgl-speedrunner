@@ -89,6 +89,12 @@ class App extends Application {
               },
             "translation": [0, 0,-15]
         }
+
+        this.lightJSON = {
+            "type": "light",
+            //"rotation": [0,0,0],
+            //"translation": [0, -200,0]
+        }
     }
     
     setScoreElement(score){
@@ -104,6 +110,7 @@ class App extends Application {
         this.builder = builder;
         this.scene = builder.build();
         this.player = builder.createNode(this.playerJSON);
+        this.light = builder.createNode(this.lightJSON);
 
         this.scene.addNode(this.player);
 
@@ -120,6 +127,7 @@ class App extends Application {
             }
         });
         this.player.addChild(this.camera);
+        this.player.addChild(this.light)
 
         this.camera.aspect = this.aspect;
 
@@ -165,7 +173,7 @@ class App extends Application {
 
     render() {
         if (this.scene) {
-            this.renderer.render(this.scene, this.camera);
+            this.renderer.render(this.scene, this.camera, this.light, this.player);
         }
         if(this.scoreEl){
             this.scoreEl.innerHTML = this.score.toFixed(0);

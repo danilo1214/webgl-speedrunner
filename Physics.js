@@ -1,4 +1,5 @@
 import Camera from "./Camera.js";
+import Light from "./Light.js";
 import Obstacle from "./Obstacle.js";
 import Player from "./Player.js";
 import Powerup from "./Powerup.js";
@@ -66,7 +67,7 @@ export default class Physics {
             max: maxb
         });
 
-        if (!isColliding || a instanceof Camera) {
+        if (!isColliding || a instanceof Camera || a instanceof Light || b instanceof Light || b instanceof Camera) {
             return;
         }
 
@@ -86,6 +87,7 @@ export default class Physics {
 
         if(a instanceof Player && !a.jumping && this.intervalIntersection(mina[1], maxa[1], minb[1], maxb[1])){
             a.velocity[1] = 0;
+            console.log("landing");
             a.landed = true;
         }
 
