@@ -8,7 +8,6 @@ export default class Player extends Model {
 
     constructor(mesh, texture, options) {
         super(mesh, texture, options);
-        console.log(this);
         Utils.init(this, this.constructor.defaults, options);
         
         this.keydownHandler = this.keydownHandler.bind(this);
@@ -41,9 +40,16 @@ export default class Player extends Model {
         if (this.keys['Space'] && this.landed) {
             this.jumping = true;
             this.landed = false;
+            this.jumpTimer = 0;
             setTimeout(()=>{
                 this.jumping = false;
+                this.jumpTimer = 0;
             }, 135); //
+        }
+        if(this.jumping){
+            this.jumpTimer += dt*1000;
+            console.log(this.jumpTimer);
+            this.rotation[0] = (Math.min(this.jumpTimer/135, 1))*2*Math.PI;
         }
         if (this.keys['KeyA']) {
             vec3.sub(acc, acc, right);

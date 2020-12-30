@@ -87,7 +87,6 @@ export default class Physics {
 
         if(a instanceof Player && !a.jumping && this.intervalIntersection(mina[1], maxa[1], minb[1], maxb[1])){
             a.velocity[1] = 0;
-            console.log("landing");
             a.landed = true;
         }
 

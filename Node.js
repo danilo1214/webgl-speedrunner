@@ -1,4 +1,3 @@
-import Powerup from './Powerup.js';
 import Utils from './Utils.js';
 
 const vec3 = glMatrix.vec3;
@@ -9,6 +8,7 @@ export default class Node {
 
     constructor(options) {
         Utils.init(this, Node.defaults, options);
+        this.type = options.type;
 
         this.transform = mat4.create();
         this.updateTransform();
@@ -30,6 +30,15 @@ export default class Node {
         if (!this.parent) {
             return mat4.clone(this.transform);
         } else {
+            if(this.type === "camera" && this.parent.type === "player" && this.parent.jumping){
+                let transform = this.parent.getGlobalTransform();
+                let clone = mat4.clone(this.transform);
+
+                clone[14] = transform[14] + this.translation[2];
+                clone[13] = transform[13] + this.translation[1];
+                clone[12] = transform[12];
+                return clone;
+            }
             let transform = this.parent.getGlobalTransform();
             return mat4.mul(transform, transform, this.transform);
         }

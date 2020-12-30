@@ -65,7 +65,6 @@ export default class Camera extends Node {
         }*/
 
         // 4: limit speed
-        console.log(c.velocity);
 
         const len = vec3.len(c.velocity);
         if (len > c.maxSpeed) {

@@ -212,7 +212,6 @@ class App extends Application {
 
         for (let i = toDelete.length -1; i >= 0; i--){
             this.scene.nodes.splice(toDelete[i], 1);
-            console.log("delete")
         }
     
     }

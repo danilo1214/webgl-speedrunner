@@ -70,7 +70,6 @@ export default class Renderer {
         mat4.mul(lightPos, lightPos, player.transform);
         mat4.mul(lightPos, lightPos, light.transform);
 
-        console.log(lightPos);
         gl.uniform3fv(program.uniforms.uLightPosition, lightPos);
         let color = vec3.clone(light.color);
         vec3.scale(color, color, 1.0 / 255.0);
