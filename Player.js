@@ -19,7 +19,7 @@ export default class Player extends Model {
 
     update(dt, elapsed) {
         const p = this;
-        const speed = Math.min(Math.max(elapsed*p.maxSpeed/360, p.minSpeed), p.maxSpeed);
+        const speed = Math.min(Math.max(elapsed*Math.min(p.maxSpeed/240, 1), p.minSpeed), p.maxSpeed);
 
         const forward = vec3.set(vec3.create(),
             0,0,-1);
@@ -109,7 +109,7 @@ export default class Player extends Model {
 
 Player.defaults = {
     velocity         : [0, 0, 0],
-    maxSpeed         : 10,
+    maxSpeed         : 15,
     strafeSpeed: 5,
     minSpeed         : 4.5,
     friction         : 0.2,

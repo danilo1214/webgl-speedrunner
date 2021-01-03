@@ -19,6 +19,9 @@ class App extends Application {
 
         this.renderer = new Renderer(gl);
         this.score = 0;
+        this.gameOver = false;
+        this.maxHealth = 5;
+        this.health = this.maxHealth;
         this.time = Date.now();
         this.initTime = Date.now();
         this.startTime = this.time;
@@ -101,6 +104,11 @@ class App extends Application {
         this.scoreEl = score;
     }
 
+    setHealthElement(health){
+        this.healthEl = health;
+        this.healthEl.innerHTML = `${this.health}HP`;
+    }
+
     async load(uri) {
 
         const scene = await new SceneLoader().loadScene('scene.json');
@@ -144,8 +152,21 @@ class App extends Application {
     addPoints(val){
         this.score += val;
     }
+    
+    damageHealth(){
+        this.health -= 1;
+
+        this.healthEl.style.width = `${Math.round((this.health/this.maxHealth)*100)}px`;
+        this.healthEl.innerHTML = `${this.health}HP`;
+        if(this.health == 0){
+            this.gameOver = true;
+        }
+    }
 
     update() {
+        if(this.gameOver){
+            return;
+        }
         const t = this.time = Date.now();
         const dt = (this.time - this.startTime) * 0.001;
         this.score += dt;
@@ -172,6 +193,7 @@ class App extends Application {
     }
 
     render() {
+        if(this.gameOver) return;
         if (this.scene) {
             this.renderer.render(this.scene, this.camera, this.light, this.player);
         }
@@ -264,10 +286,12 @@ class App extends Application {
 document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.querySelector('canvas');
     const score = document.getElementById('#score');
+    const health = document.getElementById('health');
 
 
     const app = new App(canvas);
     app.setScoreElement(score);
+    app.setHealthElement(health)
 
     const gui = new dat.GUI();
     

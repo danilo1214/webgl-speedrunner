@@ -37,3 +37,14 @@ a.back {
 a.back:hover {
     background: #ddd;
 }
+
+#health{
+    height: 25px;
+    transition: .2s ease-in;
+    width: 100px;
+    text-align: center;
+    background: red;
+}
+
+
+
