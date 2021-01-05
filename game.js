@@ -34,14 +34,14 @@ class App extends Application {
         this.player.enable();
     }
 
-    initModels(){
+    initModels() {
         this.roadJSON = {
             "type": "model",
             "mesh": 0,
             "texture": 2,
             "aabb": {
-              "min": [-2, -0.05, -6],
-              "max": [2, 0.05, 6]
+                "min": [-2, -0.05, -6],
+                "max": [2, 0.05, 6]
             },
             "translation": [0, 0, -12]
         };
@@ -51,8 +51,8 @@ class App extends Application {
             "mesh": 2,
             "texture": 0,
             "aabb": {
-              "min": [-1, -3, -6],
-              "max": [1, 3, 6]
+                "min": [-1, -3, -6],
+                "max": [1, 3, 6]
             },
             "translation": [0, 0, -12]
         };
@@ -66,31 +66,31 @@ class App extends Application {
                 "min": [-1, -1, -1],
                 "max": [1, 1, 1]
             },
-            "translation": [0, 5,-1]
-          };
+            "translation": [0, 5, -1]
+        };
 
         this.obstacleJSON = {
             "type": "obstacle",
             "mesh": 3,
             "texture": 4,
-            "rotation": [0,0,0],
+            "rotation": [0, 0, 0],
             "aabb": {
                 "min": [-1, -1, -1],
                 "max": [1, 1, 1]
-              },
-            "translation": [0, 0,-3]
+            },
+            "translation": [0, 0, -3]
         }
 
         this.powerUpJSON = {
             "type": "powerup",
             "mesh": 3,
             "texture": 3,
-            "rotation": [0,0,0],
+            "rotation": [0, 0, 0],
             "aabb": {
                 "min": [-1, -1, -1],
                 "max": [1, 1, 1]
-              },
-            "translation": [0, 0,-15]
+            },
+            "translation": [0, 0, -15]
         }
 
         this.lightJSON = {
@@ -99,12 +99,16 @@ class App extends Application {
             //"translation": [0, -200,0]
         }
     }
-    
-    setScoreElement(score){
+
+    setGameOver(gameOver) {
+        this.gameOverEl = gameOver;
+    }
+
+    setScoreElement(score) {
         this.scoreEl = score;
     }
 
-    setHealthElement(health){
+    setHealthElement(health) {
         this.healthEl = health;
         this.healthEl.innerHTML = `${this.health}HP`;
     }
@@ -112,7 +116,7 @@ class App extends Application {
     async load(uri) {
 
         const scene = await new SceneLoader().loadScene('scene.json');
-        
+
         const builder = new SceneBuilder(scene);
 
         this.builder = builder;
@@ -123,7 +127,7 @@ class App extends Application {
         this.scene.addNode(this.player);
 
 
-        
+
 
         this.physics = new Physics(this.scene, this);
 
@@ -140,31 +144,32 @@ class App extends Application {
         this.camera.aspect = this.aspect;
 
         this.camera.updateProjection();
-        
 
-        setInterval(()=>{
+
+        setInterval(() => {
             this.addNewItems();
         }, 1000);
 
-        this.renderer.prepare(this.scene);        
+        this.renderer.prepare(this.scene);
     }
 
-    addPoints(val){
+    addPoints(val) {
         this.score += val;
     }
-    
-    damageHealth(){
+
+    damageHealth() {
         this.health -= 1;
 
-        this.healthEl.style.width = `${Math.round((this.health/this.maxHealth)*100)}px`;
+        this.healthEl.style.width = `${Math.round((this.health / this.maxHealth) * 100)}px`;
         this.healthEl.innerHTML = `${this.health}HP`;
-        if(this.health == 0){
+        if (this.health == 0) {
             this.gameOver = true;
+            this.gameOverEl.style.opacity = 1;
         }
     }
 
     update() {
-        if(this.gameOver){
+        if (this.gameOver) {
             return;
         }
         const t = this.time = Date.now();
@@ -183,9 +188,9 @@ class App extends Application {
             this.physics.gravity(dt, this.player);
         }
 
-        if(this.scene){
-            this.scene.traverse(node=>{
-                if(node instanceof Obstacle || node instanceof Powerup){
+        if (this.scene) {
+            this.scene.traverse(node => {
+                if (node instanceof Obstacle || node instanceof Powerup) {
                     node.update(dt);
                 }
             })
@@ -193,11 +198,11 @@ class App extends Application {
     }
 
     render() {
-        if(this.gameOver) return;
+        if (this.gameOver) return;
         if (this.scene) {
             this.renderer.render(this.scene, this.camera, this.light, this.player);
         }
-        if(this.scoreEl){
+        if (this.scoreEl) {
             this.scoreEl.innerHTML = this.score.toFixed(0);
         }
     }
@@ -212,70 +217,70 @@ class App extends Application {
         }
     }
 
-    deletePassed(){
-        let {scene} = this;
+    deletePassed() {
+        let { scene } = this;
         const toDelete = [];
 
-        for(let i = 0; i < scene.nodes.length; i++){
+        for (let i = 0; i < scene.nodes.length; i++) {
             const node = scene.nodes[i];
-            if(node instanceof Powerup || (node instanceof Model && !( node instanceof Player) && !(node instanceof Camera)) || node instanceof Obstacle){
-                
+            if (node instanceof Powerup || (node instanceof Model && !(node instanceof Player) && !(node instanceof Camera)) || node instanceof Obstacle) {
+
                 const transform = node.getGlobalTransform();
                 const playerTransform = this.player.getGlobalTransform();
                 const zp = playerTransform[14];
                 const zt = transform[14];
 
-                if(Math.abs(zp - zt) >= this.tileLength && zp < zt){
+                if (Math.abs(zp - zt) >= this.tileLength && zp < zt) {
                     toDelete.push(i);
                 }
 
             }
         }
 
-        for (let i = toDelete.length -1; i >= 0; i--){
+        for (let i = toDelete.length - 1; i >= 0; i--) {
             this.scene.nodes.splice(toDelete[i], 1);
         }
-    
+
     }
 
-    addNewItems(){
+    addNewItems() {
 
         this.deletePassed();
 
-        const {roadJSON, cubeWallJSON, obstacleJSON, powerUpJSON, sceneLength, tileLength} = this;
+        const { roadJSON, cubeWallJSON, obstacleJSON, powerUpJSON, sceneLength, tileLength } = this;
 
         const road = this.builder.createNode(roadJSON);
 
-        
 
-        road.translation = [0, 0, - sceneLength - tileLength ];
+
+        road.translation = [0, 0, - sceneLength - tileLength];
         road.updateTransform();
         this.scene.addNode(road);
 
         const road1 = this.builder.createNode(roadJSON);
-        road1.translation = [4, 0, - sceneLength - tileLength ];
+        road1.translation = [4, 0, - sceneLength - tileLength];
         road1.updateTransform();
         this.scene.addNode(road1);
 
         this.sceneLength += tileLength;
 
         const wall = this.builder.createNode(cubeWallJSON);
-        wall.translation = [7, 0, - sceneLength - tileLength ];
+        wall.translation = [7, 0, - sceneLength - tileLength];
         wall.updateTransform();
         this.scene.addNode(wall);
 
         const wall1 = this.builder.createNode(cubeWallJSON);
-        wall1.translation = [-3, 0, - sceneLength - tileLength ];
+        wall1.translation = [-3, 0, - sceneLength - tileLength];
         wall1.updateTransform();
         this.scene.addNode(wall1);
 
         const obstacle = this.builder.createNode(obstacleJSON);
-        obstacle.translation = [Math.random()*8 -1,1+ Math.random()*4, -sceneLength - tileLength - Math.random()*tileLength -1];
+        obstacle.translation = [Math.random() * 8 - 1, 1 + Math.random() * 4, -sceneLength - tileLength - Math.random() * tileLength - 1];
         obstacle.updateTransform();
         this.scene.addNode(obstacle);
 
         const powerup = this.builder.createNode(powerUpJSON);
-        powerup.translation = [Math.random()*8, 1 + Math.random()*4, -sceneLength - tileLength - Math.random()*tileLength];
+        powerup.translation = [Math.random() * 8, 1 + Math.random() * 4, -sceneLength - tileLength - Math.random() * tileLength];
         powerup.updateTransform();
         this.scene.addNode(powerup);
         this.renderer.prepareNodes([obstacle, powerup, wall, wall1, road, road1]);
@@ -284,15 +289,19 @@ class App extends Application {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const canvas = document.querySelector('canvas');
+    let canvas = document.querySelector('canvas');
     const score = document.getElementById('#score');
     const health = document.getElementById('health');
+    const restart = document.getElementById('restart');
+    const gameOver = document.getElementById("gameOver");
 
-
-    const app = new App(canvas);
+    let app = new App(canvas);
     app.setScoreElement(score);
-    app.setHealthElement(health)
+    app.setHealthElement(health);
+    app.setGameOver(gameOver);
 
-    const gui = new dat.GUI();
-    
+    restart.addEventListener("click", () => {
+        location.reload();
+    })
+
 });
