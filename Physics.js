@@ -74,14 +74,15 @@ export default class Physics {
         if(a instanceof Player && b instanceof Obstacle){
             const index = this.scene.nodes.indexOf(b);
             this.scene.nodes.splice(index, 1);
-            this.app.damageHealth();
+            this.app.addHealth(-1);
             return;
         }
 
         if(a instanceof Player && b instanceof Powerup){
             const index = this.scene.nodes.indexOf(b);
             this.scene.nodes.splice(index, 1);
-            this.app.addPoints(25);
+            this.app.addPoints(5);
+            this.app.addHealth(1);
             return;
         }
 

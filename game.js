@@ -20,7 +20,7 @@ class App extends Application {
         this.renderer = new Renderer(gl);
         this.score = 0;
         this.gameOver = false;
-        this.maxHealth = 5;
+        this.maxHealth = 10;
         this.health = this.maxHealth;
         this.time = Date.now();
         this.initTime = Date.now();
@@ -99,6 +99,9 @@ class App extends Application {
             //"translation": [0, -200,0]
         }
     }
+    setEndScore(endScore) {
+        this.endScore = endScore;
+    }
 
     setGameOver(gameOver) {
         this.gameOverEl = gameOver;
@@ -110,7 +113,6 @@ class App extends Application {
 
     setHealthElement(health) {
         this.healthEl = health;
-        this.healthEl.innerHTML = `${this.health}HP`;
     }
 
     async load(uri) {
@@ -157,26 +159,59 @@ class App extends Application {
         this.score += val;
     }
 
-    damageHealth() {
-        this.health -= 1;
+    addHealth(hp) {
+        this.health += hp;
 
-        this.healthEl.style.width = `${Math.round((this.health / this.maxHealth) * 100)}px`;
-        this.healthEl.innerHTML = `${this.health}HP`;
-        if (this.health == 0) {
-            this.gameOver = true;
-            this.gameOverEl.style.opacity = 1;
-        }
+        if(this.health >= this.maxHealth) this.health = this.maxHealth;        
     }
 
-    update() {
-        if (this.gameOver) {
-            return;
+    die() {
+        this.gameOver = true;
+        this.gameOverEl.style.opacity = 1;
+        const localScore = localStorage.getItem("runner-score");
+        let isHighScore = false;
+
+        if (!localScore || this.score > localScore) {
+            localStorage.setItem("runner-score", this.score);
+            isHighScore = true;
         }
+        this.endScore.innerHTML = `You scored ${Math.round(this.score, 0)}pts. ${isHighScore ? 'HIGH SCORE' : ''}`;
+    }
+    updateHealth(){
+        this.healthEl.innerHTML = `${Math.round(this.health, 2)}HP`;
+        if(this.light){
+            this.light.color[0] = Math.max(220,255*((this.maxHealth - this.health)/this.maxHealth))
+        }
+        this.healthEl.style.width = `${Math.round((this.health / this.maxHealth) * 100)}px`;
+
+    }
+    update() {
         const t = this.time = Date.now();
         const dt = (this.time - this.startTime) * 0.001;
         this.score += dt;
         const elapsed = (this.time - this.initTime) * 0.001;
         this.startTime = this.time;
+
+        if (this.player) {
+            const playerTransform = this.player.getGlobalTransform();
+            const y = playerTransform[13];
+
+            if (y <= -10) {
+                this.die();
+            }
+        }
+
+        this.health -= 1*(elapsed/300)*dt;
+
+        this.updateHealth();
+
+        if (this.health <= 0) {
+            this.die();
+        }
+
+        if (this.gameOver) {
+            return;
+        }
 
         if (this.player) {
             this.player.update(dt, elapsed);
@@ -198,6 +233,7 @@ class App extends Application {
     }
 
     render() {
+    
         if (this.gameOver) return;
         if (this.scene) {
             this.renderer.render(this.scene, this.camera, this.light, this.player);
@@ -294,14 +330,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const health = document.getElementById('health');
     const restart = document.getElementById('restart');
     const gameOver = document.getElementById("gameOver");
+    const endScore = document.getElementById("#endScore");
 
     let app = new App(canvas);
     app.setScoreElement(score);
     app.setHealthElement(health);
     app.setGameOver(gameOver);
+    app.setEndScore(endScore);
 
     restart.addEventListener("click", () => {
-        location.reload();
+        if(app.gameOver){
+            location.reload();
+        }
     })
 
 });
