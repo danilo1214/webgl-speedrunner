@@ -39,8 +39,8 @@
     "common/images/grass.png",
     "common/images/road.jpg",
     "common/images/health.png",
-    "common/images/virus.png"
-
+    "common/images/virus.png",
+    "common/images/player.png"
   ],
   "meshes": [
     "common/models/road.json",

@@ -60,7 +60,7 @@ class App extends Application {
         this.playerJSON = {
             "type": "player",
             "mesh": 3,
-            "texture": 1,
+            "texture": 5,
             "rotation": [0, 0, 0],
             "aabb": {
                 "min": [-1, -1, -1],
@@ -180,7 +180,7 @@ class App extends Application {
     updateHealth(){
         this.healthEl.innerHTML = `${Math.round(this.health, 2)}HP`;
         if(this.light){
-            this.light.color[0] = Math.max(220,255*((this.maxHealth - this.health)/this.maxHealth))
+            this.light.color[0] = Math.max(220,400*((this.maxHealth - this.health)/this.maxHealth))
         }
         this.healthEl.style.width = `${Math.round((this.health / this.maxHealth) * 100)}px`;
 
@@ -188,9 +188,13 @@ class App extends Application {
     update() {
         const t = this.time = Date.now();
         const dt = (this.time - this.startTime) * 0.001;
-        this.score += dt;
         const elapsed = (this.time - this.initTime) * 0.001;
         this.startTime = this.time;
+
+        if(this.gameOver){
+            return;
+        }
+
 
         if (this.player) {
             const playerTransform = this.player.getGlobalTransform();
@@ -200,9 +204,9 @@ class App extends Application {
                 this.die();
             }
         }
-
-        this.health -= 1*(elapsed/300)*dt;
-
+        
+        this.score += dt;
+        this.addHealth (-(elapsed/300)*dt);
         this.updateHealth();
 
         if (this.health <= 0) {

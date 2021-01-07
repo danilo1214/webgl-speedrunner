@@ -110,8 +110,8 @@ export default class Player extends Model {
 Player.defaults = {
     velocity         : [0, 0, 0],
     maxSpeed         : 15,
-    strafeSpeed: 5,
-    minSpeed         : 4.5,
+    strafeSpeed: 3,
+    minSpeed         : 6,
     friction         : 0.2,
     acceleration     : 20
 };

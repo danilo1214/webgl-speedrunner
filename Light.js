@@ -10,7 +10,7 @@ export default class Light extends Node {
             diffuse          : 1,
             specular         : 1,
             shininess        : 1,
-            color            : [220, 220, 245],
+            color            : [220, 220, 220],
             attenuatuion     : [1.0, 0, 0.001]
         });
     }
